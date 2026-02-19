@@ -7,6 +7,11 @@ import com.metacoding.springv2.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * 댓글 엔티티 클래스.
+ * reply_tb 테이블과 매핑되며, 댓글 내용(comment)을 가진다.
+ * User와 N:1 관계, Board와 N:1 관계를 갖는다.
+ */
 @NoArgsConstructor
 @Getter
 @Entity
