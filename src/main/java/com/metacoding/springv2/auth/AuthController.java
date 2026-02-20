@@ -28,21 +28,21 @@ public class AuthController {
     // 회원가입 처리
     @PostMapping("/join")
     public ResponseEntity<?> join(@Valid @RequestBody AuthRequest.JoinDTO requestDTO, Errors errors) {
-        var responseDTO = userService.회원가입(requestDTO);
+        var responseDTO = userService.signUp(requestDTO);
         return Resp.ok(responseDTO);
     }
 
     // 로그인 처리 후 JWT 액세스 토큰 반환
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest.LoginDTO requestDTO) {
-        String accessToken = userService.로그인(requestDTO);
+        String accessToken = userService.login(requestDTO);
         return ResponseEntity.ok(accessToken);
     }
 
     // 유저네임 사용 가능 여부 확인
     @GetMapping("/check-username")
     public ResponseEntity<?> getUsername(@RequestParam String username) {
-        var responseDTO = userService.유저네임중복체크(username);
+        var responseDTO = userService.checkUsernameDuplicate(username);
         return Resp.ok(responseDTO);
     }
 }

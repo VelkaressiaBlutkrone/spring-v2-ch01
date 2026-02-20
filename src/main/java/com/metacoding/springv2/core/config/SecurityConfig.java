@@ -1,17 +1,24 @@
 package com.metacoding.springv2.core.config;
 
-import com.metacoding.springv2.core.filter.JwtAuthorizationFilter;
-import com.metacoding.springv2.core.util.*;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.*;
-import java.util.List;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.metacoding.springv2.core.filter.JwtAuthorizationFilter;
+import com.metacoding.springv2.core.util.JwtProvider;
+import com.metacoding.springv2.core.util.RespFilter;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Spring Security 설정 클래스.
@@ -59,15 +66,16 @@ public class SecurityConfig {
         http.addFilterBefore(new JwtAuthorizationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.exceptionHandling(ex -> ex
-                .authenticationEntryPoint((request, response, authException) -> RespFilter.fail(response, 401, "로그인 후 이용해주세요"))
-                .accessDeniedHandler((request, response, accessDeniedException) -> RespFilter.fail(response, 403, "권한이 없습니다"))
-        );
+                .authenticationEntryPoint(
+                        (request, response, authException) -> RespFilter.fail(response, 401, "로그인 후 이용해주세요"))
+                .accessDeniedHandler(
+                        (request, response, accessDeniedException) -> RespFilter.fail(response, 403, "권한이 없습니다")));
         http.authorizeHttpRequests(
                 authorize -> authorize
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/users/**", "/api/boards/**", "/api/replies/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().permitAll()
-        );
+                        .requestMatchers("/api/users/**", "/api/boards/**", "/api/replies/**")
+                        .hasAnyRole("USER", "ADMIN")
+                        .anyRequest().permitAll());
 
         return http.build();
     }

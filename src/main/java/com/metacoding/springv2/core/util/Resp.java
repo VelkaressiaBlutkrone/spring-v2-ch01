@@ -1,7 +1,9 @@
 package com.metacoding.springv2.core.util;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import lombok.Data;
-import org.springframework.http.*;
 
 /**
  * 통일된 API 응답 래퍼 클래스.

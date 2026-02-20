@@ -24,7 +24,7 @@ public class UserService {
 
     // 회원가입 처리 (비밀번호 암호화 후 저장)
     @Transactional
-    public AuthResponse.DTO 회원가입(AuthRequest.JoinDTO requestDTO) {
+    public AuthResponse.DTO signUp(AuthRequest.JoinDTO requestDTO) {
         if (userRepository.findByUsername(requestDTO.username()).isPresent())
             throw new Exception401("이미 존재하는 유저네임입니다");
         String encPassword = bCryptPasswordEncoder.encode(requestDTO.password());
@@ -33,7 +33,7 @@ public class UserService {
     }
 
     // 로그인 처리 (비밀번호 검증 후 JWT 토큰 반환)
-    public String 로그인(AuthRequest.LoginDTO requestDTO) {
+    public String login(AuthRequest.LoginDTO requestDTO) {
         User findUser = userRepository.findByUsername(requestDTO.username())
                 .orElseThrow(() -> new Exception404("유저네임 혹은 비밀번호가 일치하지 않습니다"));
         if (!bCryptPasswordEncoder.matches(requestDTO.password(), findUser.getPassword()))
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     // 유저네임 사용 가능 여부 확인
-    public Map<String, Object> 유저네임중복체크(String username) {
+    public Map<String, Object> checkUsernameDuplicate(String username) {
         Map<String, Object> mapDTO = new HashMap<>();
         if (userRepository.findByUsername(username).isPresent()) {
             mapDTO.put("available", false);
