@@ -51,4 +51,17 @@ public class UserService {
         }
         return mapDTO;
     }
+
+    /**
+     * 사용자 ID로 개별 사용자 정보를 조회합니다.
+     * 
+     * @param id 조회할 사용자의 ID
+     * @return UserResponse.DTO 조회된 사용자 정보 DTO
+     * @throws Exception404 해당 ID의 사용자를 찾을 수 없을 때 발생
+     */
+    public UserResponse.DTO findUserById(Integer id) {
+        User userPS = userRepository.findById(id)
+                .orElseThrow(() -> new Exception404("해당 유저를 찾을 수 없습니다"));
+        return new UserResponse.DTO(userPS);
+    }
 }
